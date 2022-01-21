@@ -16,8 +16,8 @@ public class ChatController {
                 chatDisplay.setText(stringMessage);
             } else {
                 chatDisplay.setText(chatDisplay.getText() + "\n" + stringMessage);
-                inputArea.setText("");
             }
+            inputArea.setText("");
         }
     }
 }
