@@ -7,17 +7,23 @@ import javafx.scene.control.TextField;
 public class ChatController {
     public TextArea chatDisplay;
     public TextField inputArea;
+    final ChatClient client;
+
+    public ChatController() {
+        client = new ChatClient(this);
+    }
 
     @FXML
     protected void onSendButtonClick() {
-        String stringMessage = inputArea.getText();
-        if (stringMessage != null && !stringMessage.isEmpty()) {
-            if (chatDisplay.getText().isEmpty()) {
-                chatDisplay.setText(stringMessage);
-            } else {
-                chatDisplay.setText(chatDisplay.getText() + "\n" + stringMessage);
-            }
-            inputArea.setText("");
+        final String message = inputArea.getText();
+        if (message != null && !message.isEmpty()) {
+            client.sendMessage(message);
+            inputArea.clear();
+            inputArea.requestFocus();
         }
+    }
+
+    public void addMessage(String message) {
+        chatDisplay.appendText(message + "\n");
     }
 }
