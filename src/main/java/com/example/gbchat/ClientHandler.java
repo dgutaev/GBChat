@@ -4,6 +4,9 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ClientHandler {
     private final Socket socket;
@@ -60,6 +63,9 @@ public class ClientHandler {
     }
 
     private void readMessage() {
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date date = new Date();
+        System.out.println(dateFormat.format(date));
         try {
             while (true) {
                 final String message = in.readUTF();
@@ -70,9 +76,9 @@ public class ClientHandler {
                     final String[] split = message.split(" ");
                     final String destNick = split[1];
                     final String personalMessage = split[2];
-                    chatServer.personalMessage(nick, destNick, personalMessage);
+                    chatServer.personalMessage(nick, destNick, "(" + dateFormat.format(date) + ") " + personalMessage);
                 } else {
-                    chatServer.broadcast(nick,message);
+                    chatServer.broadcast(nick, "(" + dateFormat.format(date) + ") " + message);
                 }
             }
         } catch (IOException e) {
@@ -80,7 +86,6 @@ public class ClientHandler {
         }
     }
 
-    //на нашей совести проверку сделать
     private void authenticate() {
         while (true) {
             try {
@@ -97,7 +102,7 @@ public class ClientHandler {
                         }
                         sendMessage("/authok " + nick);
                         this.nick = nick;
-                        chatServer.broadcast(nick,"зашел в чат");
+                        chatServer.broadcast(nick, "зашел в чат");
                         chatServer.subscribe(this);
                         break;
                     } else {
