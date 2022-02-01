@@ -72,7 +72,7 @@ public class ClientHandler {
                     final String personalMessage = split[2];
                     chatServer.personalMessage(nick, personalMessage);
                 } else {
-                    chatServer.broadcast(message);
+                    chatServer.broadcast(nick,message);
                 }
             }
         } catch (IOException e) {
@@ -97,7 +97,7 @@ public class ClientHandler {
                         }
                         sendMessage("/authok " + nick);
                         this.nick = nick;
-                        chatServer.broadcast("Пользователь " + nick + " зашел в чат");
+                        chatServer.broadcast(nick,"зашел в чат");
                         chatServer.subscribe(this);
                         break;
                     } else {

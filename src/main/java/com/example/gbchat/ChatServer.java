@@ -46,9 +46,9 @@ public class ChatServer {
         return clients.containsKey(nick);
     }
 
-    public void broadcast(String message) {
+    public void broadcast(String nick, String message) {
         for (ClientHandler client : clients.values()) {
-            client.sendMessage(message);
+            client.sendMessage(nick + ": " + message);
         }
     }
 
