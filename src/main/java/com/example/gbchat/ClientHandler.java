@@ -66,7 +66,14 @@ public class ClientHandler {
                 if ("/end".equals(message)) {
                     break;
                 }
-                chatServer.broadcast(message);
+                if (message.startsWith("/w")) {
+                    final String[] split = message.split(" ");
+                    final String nick = split[1];
+                    final String personalMessage = split[2];
+                    chatServer.personalMessage(nick, personalMessage);
+                } else {
+                    chatServer.broadcast(message);
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -109,7 +116,8 @@ public class ClientHandler {
             if (message.startsWith("/authok")) {
                 out.writeUTF(message);
             } else {
-                out.writeUTF(nick + ": " + message);
+                System.out.println(nick);
+                out.writeUTF(message);
             }
         } catch (IOException e) {
             e.printStackTrace();

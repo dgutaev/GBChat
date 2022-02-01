@@ -51,4 +51,12 @@ public class ChatServer {
             client.sendMessage(message);
         }
     }
+
+    public void personalMessage(String nick, String message) {
+        for (ClientHandler client : clients.values()) {
+            if (client.getNick().equals(nick)) {
+                client.sendMessage("Личное сообщение: " + message);
+            }
+        }
+    }
 }
