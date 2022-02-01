@@ -68,9 +68,9 @@ public class ClientHandler {
                 }
                 if (message.startsWith("/w")) {
                     final String[] split = message.split(" ");
-                    final String nick = split[1];
+                    final String destNick = split[1];
                     final String personalMessage = split[2];
-                    chatServer.personalMessage(nick, personalMessage);
+                    chatServer.personalMessage(nick, destNick, personalMessage);
                 } else {
                     chatServer.broadcast(nick,message);
                 }
