@@ -26,7 +26,7 @@ public class ChatClient {
                     while (true) {
                         final String authMsg = in.readUTF();
                         if (authMsg.startsWith("/authok")) {
-                            final String nick = authMsg.split(" ")[1];
+                            final String nick = authMsg.split(ClientHandler.TAB)[1];
                             controller.addMessage("Успешная авторизация под ником " + nick);
                             break;
                         }
