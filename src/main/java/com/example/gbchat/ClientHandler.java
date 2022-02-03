@@ -13,7 +13,6 @@ public class ClientHandler {
     private final ChatServer chatServer;
     private final DataInputStream in;
     private final DataOutputStream out;
-    public final static String TAB = " ";
     private String nick;
 
     public ClientHandler(Socket socket, ChatServer chatServer) {
@@ -73,7 +72,7 @@ public class ClientHandler {
                     break;
                 }
                 if (message.startsWith("/w")) {
-                    final String[] split = message.split(TAB);
+                    final String[] split = message.split(Commands.TAB);
                     final String destNick = split[1];
                     final String personalMessage = split[2];
                     chatServer.personalMessage(nick, destNick, "(" + dateFormat.format(date) + ") " + personalMessage);
@@ -91,7 +90,7 @@ public class ClientHandler {
             try {
                 final String message = in.readUTF();
                 if (message.startsWith("/auth")) {
-                    final String[] split = message.split(TAB);
+                    final String[] split = message.split(Commands.TAB);
                     final String login = split[1];
                     final String password = split[2];
                     final String nick = chatServer.getAuthService().getNickByLoginAndPassword(login, password);
@@ -100,7 +99,7 @@ public class ClientHandler {
                             sendMessage("Пользователь уже авторизован");
                             continue;
                         }
-                        sendMessage("/authok" + TAB + nick);
+                        sendMessage("/authok" + Commands.TAB + nick);
                         this.nick = nick;
                         chatServer.broadcast(nick, "зашел в чат");
                         chatServer.subscribe(this);

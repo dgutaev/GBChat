@@ -5,6 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ChatServer {
 
@@ -58,5 +59,10 @@ public class ChatServer {
                 client.sendMessage("Личное сообщение от " + destNick + ": " + message);
             }
         }
+    }
+
+    public void broadcastClientList(){
+        final String message = clients.values().stream().map(ClientHandler::getNick).collect(Collectors.joining(Commands.TAB,"/clients", ""));
+        broadcast("", message);
     }
 }
