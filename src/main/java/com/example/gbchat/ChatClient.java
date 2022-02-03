@@ -4,8 +4,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 
 public class ChatClient {
     private Socket socket;
@@ -27,7 +25,7 @@ public class ChatClient {
                 try {
                     while (true) {
                         final String authMsg = in.readUTF();
-                        if (authMsg.startsWith("/authok")) {
+                        if (authMsg.startsWith(Commands.AUTHOK)) {
                             final String nick = authMsg.split(Commands.TAB)[1];
                             controller.addMessage("Успешная авторизация под ником " + nick);
                             controller.setAuth(true);
@@ -36,12 +34,12 @@ public class ChatClient {
                     }
                     while (true) {
                         final String message = in.readUTF();
-                        if ("/end".equals(message)) {
+                        if (Commands.END.equals(message)) {
                             controller.setAuth(false);
                             break;
                         }
-                        if (message.startsWith("/clients")) {
-                            final String[] clients = message.replace("/clients", "").split(Commands.TAB);
+                        if (message.startsWith(Commands.CLIENTS)) {
+                            final String[] clients = message.replace(Commands.CLIENTS, "").split(Commands.TAB);
                             controller.updateClientsList(clients);
                         }
                          controller.addMessage(message);

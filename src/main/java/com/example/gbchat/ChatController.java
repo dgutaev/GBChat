@@ -9,9 +9,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class ChatController {
     public TextArea chatDisplay;
     public TextField inputArea;
@@ -46,7 +43,7 @@ public class ChatController {
     }
 
     public void bthAuthClick(ActionEvent actionEvent) {
-        client.sendMessage("/auth" + Commands.TAB + loginField.getText() + Commands.TAB + passwordField.getText());
+        client.sendMessage(Commands.AUTH + Commands.TAB + loginField.getText() + Commands.TAB + passwordField.getText());
     }
 
     public void setAuth(boolean isAuthSuccess) {
@@ -57,8 +54,8 @@ public class ChatController {
     public void selectClient(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount()==2) {
             final String message = inputArea.getText();
-            clientList.getSelectionModel().getSelectedItems();
-            inputArea.setText("/w"+client+Commands.TAB+message);
+            final String client = clientList.getSelectionModel().getSelectedItem();
+            inputArea.setText(Commands.PRIVATE_MESSAGE + Commands.TAB + client + Commands.TAB + message);
             inputArea.requestFocus();
             inputArea.selectEnd();
         }

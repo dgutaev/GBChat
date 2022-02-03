@@ -33,10 +33,12 @@ public class ChatServer {
 
     public void subscribe(ClientHandler client) {
         clients.put(client.getNick(), client);
+        broadcastClientList();
     }
 
     public void unsubscribe(ClientHandler client) {
         clients.remove(client.getNick());
+        broadcastClientList();
     }
 
     public AuthService getAuthService() {
@@ -56,13 +58,13 @@ public class ChatServer {
     public void personalMessage(String destNick, String nick, String message) {
         for (ClientHandler client : clients.values()) {
             if (client.getNick().equals(nick)) {
-                client.sendMessage("Личное сообщение от " + destNick + ": " + message);
+                client.sendMessage("Личное сообщение от " + destNick + ": " + message.substring(Commands.PRIVATE_MESSAGE.length()+2+destNick.length()));
             }
         }
     }
 
     public void broadcastClientList(){
-        final String message = clients.values().stream().map(ClientHandler::getNick).collect(Collectors.joining(Commands.TAB,"/clients", ""));
+        final String message = clients.values().stream().map(ClientHandler::getNick).collect(Collectors.joining(Commands.TAB));
         broadcast("", message);
     }
 }

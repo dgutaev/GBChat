@@ -68,10 +68,10 @@ public class ClientHandler {
         try {
             while (true) {
                 final String message = in.readUTF();
-                if ("/end".equals(message)) {
+                if (Commands.END.equals(message)) {
                     break;
                 }
-                if (message.startsWith("/w")) {
+                if (message.startsWith(Commands.PRIVATE_MESSAGE)) {
                     final String[] split = message.split(Commands.TAB);
                     final String destNick = split[1];
                     final String personalMessage = split[2];
@@ -89,7 +89,7 @@ public class ClientHandler {
         while (true) {
             try {
                 final String message = in.readUTF();
-                if (message.startsWith("/auth")) {
+                if (message.startsWith(Commands.AUTH)) {
                     final String[] split = message.split(Commands.TAB);
                     final String login = split[1];
                     final String password = split[2];
@@ -99,7 +99,7 @@ public class ClientHandler {
                             sendMessage("Пользователь уже авторизован");
                             continue;
                         }
-                        sendMessage("/authok" + Commands.TAB + nick);
+                        sendMessage(Commands.AUTHOK + Commands.TAB + nick);
                         this.nick = nick;
                         chatServer.broadcast(nick, "зашел в чат");
                         chatServer.subscribe(this);
@@ -117,10 +117,9 @@ public class ClientHandler {
 
     public void sendMessage(String message) {
         try {
-            if (message.startsWith("/authok")) {
+            if (message.startsWith(Commands.AUTHOK)) {
                 out.writeUTF(message);
             } else {
-                System.out.println(nick);
                 out.writeUTF(message);
             }
         } catch (IOException e) {

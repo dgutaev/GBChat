@@ -2,11 +2,10 @@ package com.example.gbchat;
 
 public class Commands {
     public final static String TAB = " ";
-    public final static String COMMAND_PREFIX = "/";
-    public final static String COMMAND_AUTH = COMMAND_PREFIX + "auth";
-    public final static String COMMAND_AUTHOK = COMMAND_PREFIX + "authok";
-    public final static String COMMAND_PRIVATE_MESSAGE = COMMAND_PREFIX + "w";
-    public final static String COMMAND_END = COMMAND_PREFIX + "end";
-    public final static String COMMAND_CLIENTS = COMMAND_PREFIX + "clients";
-
+    public final static String PREFIX = "/";
+    public final static String AUTH = PREFIX + "auth";
+    public final static String AUTHOK = PREFIX + "authok";
+    public final static String PRIVATE_MESSAGE = PREFIX + "w";
+    public final static String END = PREFIX + "end";
+    public final static String CLIENTS = PREFIX + "clients";
 }
