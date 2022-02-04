@@ -55,16 +55,22 @@ public class ChatServer {
         }
     }
 
+    public void systemMessage(String nick, String message) {
+        for (ClientHandler client : clients.values()) {
+            client.sendMessage(nick + message);
+        }
+    }
+
     public void personalMessage(String destNick, String nick, String message) {
         for (ClientHandler client : clients.values()) {
             if (client.getNick().equals(nick)) {
-                client.sendMessage("Личное сообщение от " + destNick + ": " + message.substring(Commands.PRIVATE_MESSAGE.length()+2+destNick.length()));
+                client.sendMessage("Личное сообщение от " + destNick + ": " + message.substring(Commands.PRIVATE_MESSAGE.length() + 2 + destNick.length()));
             }
         }
     }
 
-    public void broadcastClientList(){
+    public void broadcastClientList() {
         final String message = clients.values().stream().map(ClientHandler::getNick).collect(Collectors.joining(Commands.TAB));
-        broadcast("", message);
+        systemMessage(Commands.CLIENTS, message);
     }
 }

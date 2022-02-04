@@ -64,7 +64,6 @@ public class ClientHandler {
     private void readMessage() {
         DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
         Date date = new Date();
-        System.out.println(dateFormat.format(date));
         try {
             while (true) {
                 final String message = in.readUTF();
@@ -88,7 +87,16 @@ public class ClientHandler {
     private void authenticate() {
         while (true) {
             try {
-                final String message = in.readUTF();
+                /*
+                new Thread(() -> {
+                    try {
+                        wait(120000);
+                        closeConnection();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }).start();
+*/              final String message = in.readUTF();
                 if (message.startsWith(Commands.AUTH)) {
                     final String[] split = message.split(Commands.TAB);
                     final String login = split[1];
@@ -99,7 +107,8 @@ public class ClientHandler {
                             sendMessage("Пользователь уже авторизован");
                             continue;
                         }
-                        sendMessage(Commands.AUTHOK + Commands.TAB + nick);
+                 //       Thread.currentThread().join();
+                        sendMessage(Commands.AUTOK + Commands.TAB + nick);
                         this.nick = nick;
                         chatServer.broadcast(nick, "зашел в чат");
                         chatServer.subscribe(this);
@@ -111,13 +120,15 @@ public class ClientHandler {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+         //   } catch (InterruptedException e) {
+         //       e.printStackTrace();
             }
         }
     }
 
     public void sendMessage(String message) {
         try {
-            if (message.startsWith(Commands.AUTHOK)) {
+            if (message.startsWith(Commands.AUTOK)) {
                 out.writeUTF(message);
             } else {
                 out.writeUTF(message);
