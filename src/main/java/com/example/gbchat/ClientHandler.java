@@ -87,14 +87,17 @@ public class ClientHandler {
     private void authenticate() {
         while (true) {
             try {
-                Thread logoutThread = new Thread(() -> {
+                final Thread logoutThread = new Thread(() -> {
                     {
-                        try {
-                            Thread.sleep(5_000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                        while (!Thread.currentThread().isInterrupted()) {
+                            try {
+                                Thread.sleep(5_000);
+                                closeConnection();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                                break;
+                            }
                         }
-                        closeConnection();
                     }
                 });
                 logoutThread.start();
