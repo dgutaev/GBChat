@@ -87,16 +87,18 @@ public class ClientHandler {
     private void authenticate() {
         while (true) {
             try {
-                /*
-                new Thread(() -> {
-                    try {
-                        wait(120000);
+                Thread logoutThread = new Thread(() -> {
+                    {
+                        try {
+                            Thread.sleep(5_000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         closeConnection();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
-                }).start();
-*/              final String message = in.readUTF();
+                });
+                logoutThread.start();
+                final String message = in.readUTF();
                 if (message.startsWith(Commands.AUTH)) {
                     final String[] split = message.split(Commands.TAB);
                     final String login = split[1];
@@ -107,7 +109,7 @@ public class ClientHandler {
                             sendMessage("Пользователь уже авторизован");
                             continue;
                         }
-                 //       Thread.currentThread().join();
+                        logoutThread.interrupt();
                         sendMessage(Commands.AUTOK + Commands.TAB + nick);
                         this.nick = nick;
                         chatServer.broadcast(nick, "зашел в чат");
@@ -116,12 +118,9 @@ public class ClientHandler {
                     } else {
                         sendMessage("Неверные логин и пароль");
                     }
-
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-         //   } catch (InterruptedException e) {
-         //       e.printStackTrace();
             }
         }
     }
