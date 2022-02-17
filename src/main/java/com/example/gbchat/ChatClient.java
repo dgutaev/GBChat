@@ -18,7 +18,7 @@ public class ChatClient {
 
     private void openConnection() {
         try {
-            socket = new Socket("localhost", 8189);
+            socket = new Socket("localhost", 55555);
             in = new DataInputStream(socket.getInputStream());
             out = new DataOutputStream(socket.getOutputStream());
             new Thread(() -> {
