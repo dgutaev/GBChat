@@ -9,7 +9,7 @@ public class ChatClient {
     private Socket socket;
     private DataInputStream in;
     private DataOutputStream out;
-    private ChatController controller;
+    private final ChatController controller;
 
     public ChatClient(ChatController controller) {
         this.controller = controller;
