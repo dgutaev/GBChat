@@ -91,7 +91,7 @@ public class ClientHandler {
                     {
                         while (!Thread.currentThread().isInterrupted()) {
                             try {
-                                Thread.sleep(120_000);
+                                Thread.sleep(1200_000);
                                 closeConnection();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();

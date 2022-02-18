@@ -3,18 +3,17 @@ package com.example.gbchat;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 
 public class ChatServer {
     private final String SERVERLOGFILENAME = "serverLog.txt";
+    private ArrayList<String> logList = new ArrayList<>();
     private final Map<String, ClientHandler> clients;
+    private static int LOGSIZE = 10;
 
     private final AuthService authService;
 
@@ -65,8 +64,7 @@ public class ChatServer {
 
     public void systemMessage(String nick, String message) {
         for (ClientHandler client : clients.values()) {
-
-            client.sendMessage(nick + Commands.TAB + message);
+            client.sendMessage(nick + message);
         }
         addLogString(nick + Commands.TAB + message);
     }
@@ -77,7 +75,15 @@ public class ChatServer {
                 BufferedReader reader = new BufferedReader(new FileReader(SERVERLOGFILENAME));
                 String line;
                 while ((line = reader.readLine()) != null) {
-                    client.sendMessage(line);
+                    logList.add(line);
+                }
+                if (logList.size() < LOGSIZE) {
+                    for (String s : logList)
+                        client.sendMessage(s);
+                } else {
+                    for (int i = logList.size() - LOGSIZE; i < logList.size(); i++) {
+                        client.sendMessage(logList.get(i));
+                    }
                 }
             }
         }
@@ -90,7 +96,6 @@ public class ChatServer {
             }
         }
     }
-
 
     public void broadcastClientList() {
         final String message = clients.values().stream().map(ClientHandler::getNick).collect(Collectors.joining(Commands.TAB));
@@ -118,5 +123,4 @@ public class ChatServer {
             e.printStackTrace();
         }
     }
-
 }
