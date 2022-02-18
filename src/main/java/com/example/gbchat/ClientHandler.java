@@ -117,6 +117,7 @@ public class ClientHandler {
                         this.nick = nick;
                         chatServer.broadcast(nick, "зашел в чат");
                         chatServer.subscribe(this);
+                        chatServer.personalLogMessage(nick);
                         break;
                     } else {
                         sendMessage("Неверные логин и пароль");
