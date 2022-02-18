@@ -1,8 +1,6 @@
 package com.example.gbchat;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 public class ChatClient {
@@ -10,6 +8,7 @@ public class ChatClient {
     private DataInputStream in;
     private DataOutputStream out;
     private final ChatController controller;
+    private String logFileName = "";
 
     public ChatClient(ChatController controller) {
         this.controller = controller;
@@ -23,11 +22,12 @@ public class ChatClient {
             out = new DataOutputStream(socket.getOutputStream());
             new Thread(() -> {
                 try {
-                    while (true) {
+                     while (true) {
                         final String authMsg = in.readUTF();
                         if (authMsg.startsWith(Commands.AUTOK)) {
                             final String nick = authMsg.split(Commands.TAB)[1];
                             controller.addMessage("Успешная авторизация под ником " + nick);
+                            createLogFile(nick); //создание лога
                             controller.setAuth(true);
                             break;
                         }
@@ -42,7 +42,10 @@ public class ChatClient {
                             final String[] clients = message.replace(Commands.CLIENTS, "").split(Commands.TAB);
                             controller.updateClientsList(clients);
                         }
-                         controller.addMessage(message);
+                        controller.addMessage(message);
+                        FileWriter writer = new FileWriter(logFileName, true);
+                        writer.write("\n"+message);
+                        writer.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -83,6 +86,18 @@ public class ChatClient {
     public void sendMessage(String message) {
         try {
             out.writeUTF(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void createLogFile(String nick) {
+        logFileName = "history_" + nick + ".txt";
+        File file = new File(logFileName);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
