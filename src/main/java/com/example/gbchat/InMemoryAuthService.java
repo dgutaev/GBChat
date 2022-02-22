@@ -1,49 +1,50 @@
 package com.example.gbchat;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
 
 public class InMemoryAuthService implements AuthService {
 
-    private final List<UserData> users;
+    private final Connection connect;
 
     public InMemoryAuthService() {
-        users = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            users.add(new UserData("login" + i, "pass" + i, "nick" + i));
-        }
+        connect = connect();
     }
 
-    @Override
-    public String getNickByLoginAndPassword(String login, String password) {
-        for (UserData user : users) {
-            if (user.getLogin().equals(login) && user.getPassword().equals(password)) return user.getNick();
+    private Connection connect() {
+        try {
+            try {
+                return DriverManager.getConnection("jdbc:sqlite:clientsDB.db");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    private static class UserData {
-        private final String login;
-
-        public String getLogin() {
-            return login;
+    @Override
+    public String getNickByLoginAndPassword(String login, String password) throws SQLException {
+        try (final PreparedStatement ps = connect.prepareStatement("select nick from clients where login = ? and password = ?")) {
+            ps.setString(1, login);
+            ps.setString(2, password);
+            final ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString(1);
+            }
+            return null;
         }
+    }
 
-        public String getPassword() {
-            return password;
-        }
-
-        public String getNick() {
-            return nick;
-        }
-
-        private final String password;
-        private final String nick;
-
-        private UserData(String login, String password, String nick) {
-            this.login = login;
-            this.password = password;
-            this.nick = nick;
+    @Override
+    public boolean login(String login, String password, String nick) {
+        try (final PreparedStatement ps = connect.prepareStatement("insert into client (login, password, nick) values ?, ?, ?")) {
+            ps.setString(1, login);
+            ps.setString(2, password);
+            ps.setString(3, nick);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException();
         }
     }
 }
