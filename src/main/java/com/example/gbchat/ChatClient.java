@@ -38,6 +38,11 @@ public class ChatClient {
                             controller.setAuth(false);
                             break;
                         }
+                      //  if (Commands.CHANGENICK.equals(message)) {
+                     //       controller.changeNick(true);
+                     //       break;
+                     //   }
+
                         if (message.startsWith(Commands.CLIENTS)) {
                             final String[] clients = message.replace(Commands.CLIENTS, "").split(Commands.TAB);
                             controller.updateClientsList(clients);

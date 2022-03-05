@@ -8,4 +8,5 @@ public class Commands {
     public final static String PRIVATE_MESSAGE = PREFIX + "w";
     public final static String END = PREFIX + "end";
     public final static String CLIENTS = PREFIX + "clients";
+    public final static String CHANGENICK = PREFIX + "chg";
 }
